@@ -24,7 +24,7 @@ class LotteryResultExcelWriterSpec extends Specification {
         lotteryResult.unmatchedRegistrations = [unmatchedRegistration]
 
         when:
-        LotteryResultExcelWriter.write(new File("/tmp/lottery-result.xlsx"), lotteryResult)
+        LotteryResultExcelWriter.write(new File('./lottery-result-template.xlsx'), new File("/tmp/lottery-result.xlsx"), lotteryResult)
 
         then:
         true

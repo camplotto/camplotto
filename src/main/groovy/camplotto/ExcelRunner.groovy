@@ -10,8 +10,9 @@ import camplotto.excel.SeasonExcelParser
 
 class ExcelRunner {
     static void main(String[] args) {
-        if (!args || args.length != 2) {
-            println "Usage: ExcelRunner <season-file-path> <lottery-result-file-path"
+        if (!args || args.length != 3) {
+            println "Usage: java -jar camplotto <season-file-path> <lottery-result-template-file> <lottery-result-file>"
+            System.exit(1)
         }
 
         File seasonFile = new File(args[0])
@@ -21,8 +22,9 @@ class ExcelRunner {
         }
         LotteryResult lotteryResult = computeResult(seasonFile)
 
-        File resultFile = new File(args[1])
-        LotteryResultExcelWriter.write(resultFile, lotteryResult)
+        File resultTemplateFile = new File(args[1])
+        File resultFile = new File(args[2])
+        LotteryResultExcelWriter.write(resultTemplateFile, resultFile, lotteryResult)
     }
 
     static LotteryResult computeResult(File seasonFile) {

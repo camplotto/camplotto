@@ -5,8 +5,8 @@ import net.sf.jxls.transformer.XLSTransformer
 
 class LotteryResultExcelWriter {
 
-    static void write(File outputFile, LotteryResult lotteryResult) {
-        String templateFilePath = new File(ClassLoader.getResource("/lottery-result-template.xlsx").toURI()).absolutePath
+    static void write(File outputTemplateFile, File outputFile, LotteryResult lotteryResult) {
+        String templateFilePath = outputTemplateFile.absolutePath
 
         Map beans = [
                 takenReservations     : lotteryResult.takenReservations,
