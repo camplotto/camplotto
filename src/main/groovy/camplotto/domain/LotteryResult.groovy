@@ -8,7 +8,7 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 @CompileStatic
 class LotteryResult {
-    List<Reservation> availableReservations
+    List<Reservation> availableReservations = []
     List<Reservation> takenReservations = []
     List<Registration> unmatchedRegistrations = []
 }

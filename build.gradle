@@ -27,6 +27,13 @@ dependencies {
     compile "org.codehaus.groovy:groovy-all:2.4.7"
     compile "ch.qos.logback:logback-classic:1.1.7"
     compile "commons-beanutils:commons-beanutils:1.9.3"
+    compile 'org.apache.poi:poi:3.13'
+    compile 'org.apache.poi:poi-ooxml:3.13'
+    compile 'org.apache.poi:ooxml-schemas:1.1'
+//    compile 'org.jxls:jxls:2.4.0'
+//    compile 'org.jxls:jxls-poi:1.0.12'
+    compile 'net.sf.jxls:jxls-core:1.0.5'
+    compile 'net.sf.jxls:jxls-reader:1.0.5'
 
     testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
 }
