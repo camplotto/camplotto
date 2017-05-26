@@ -9,6 +9,5 @@ import groovy.transform.ToString
 @CompileStatic
 class Site {
     String name
-    String area
     int capacity
 }

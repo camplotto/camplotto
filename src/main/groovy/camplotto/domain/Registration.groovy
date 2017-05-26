@@ -9,8 +9,6 @@ import groovy.transform.ToString
 @CompileStatic
 class Registration {
     String name
-    Season season
-    int partySize
     List<Site> preferredSites
     List<ReservationDate> preferredDates
     boolean preferSiteOverDate
