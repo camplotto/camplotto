@@ -75,9 +75,9 @@ tasks.release.dependsOn 'build', 'bintrayUpload'
 
 /*
 Release task cheatsheet:
-// commit and push
 // export GRGIT_USER=$username
 // export GRGIT_PASS=$github_access_token
+// commit and push
 
 major release:
 gw clean release -Prelease.scope=major -Prelease.stage=final
