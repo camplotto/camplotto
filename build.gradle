@@ -5,14 +5,14 @@ buildscript {
 
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath "org.ajoberstar:gradle-git:${gradleGitVersion}"
+        classpath 'org.ajoberstar:gradle-git:1.7.2'
     }
 }
 
 plugins {
     id "com.jfrog.bintray" version "1.7.3"
-    id 'org.ajoberstar.release-opinion' version "${gradleGitVersion}"
-    id 'org.ajoberstar.grgit' version "${gradleGitVersion}"
+    id 'org.ajoberstar.release-opinion' version '1.7.2'
+    id 'org.ajoberstar.grgit' version '1.7.2'
     id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
