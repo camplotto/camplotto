@@ -6,23 +6,20 @@ class LotteryService {
 
     protected static final LOTTERY_SIMULATION_COUNT = 1000
 
-
-    static LotteryResult run(List<Reservation> availableReservations, List<Registration> registrations) {
+    static LotteryResult run(List<Reservation> reservations, List<Registration> registrations) {
         LotteryResult bestResult = new LotteryResult()
 
         for (int i = 0; i < LOTTERY_SIMULATION_COUNT; i++) {
-            List<Reservation> availableReservationsCopy = availableReservations.clone() as List<Reservation>
-            LotteryResult currentResult = new LotteryResult(availableReservations: availableReservationsCopy)
 
-            shuffleAndPrioritize(registrations)
+            LotteryResult currentResult = new LotteryResult(reservations: reservations.collect { it.clone() } as List<Reservation>, unmatchedRegistrations: [])
 
-            registrations.each { Registration registration ->
-                Reservation reservation = findAvailableReservation(availableReservationsCopy, registration)
+            List<Registration> registrationsCopy = registrations.collect { it.clone() }
+            shuffleAndPrioritize(registrationsCopy)
 
+            registrationsCopy.each { Registration registration ->
+                Reservation reservation = findAvailableReservation(currentResult.availableReservations, registration)
                 if (reservation) {
                     reservation.registration = registration
-                    currentResult.availableReservations.remove(reservation)
-                    currentResult.takenReservations << reservation
                 } else {
                     currentResult.unmatchedRegistrations << registration
                 }
@@ -30,7 +27,6 @@ class LotteryService {
 
             bestResult = getBestResult(currentResult, bestResult)
         }
-
         return bestResult
     }
 
@@ -60,9 +56,9 @@ class LotteryService {
         return null
     }
 
-    static List<Registration> shuffleAndPrioritize(List<Registration> registrations) {
+    static void shuffleAndPrioritize(List<Registration> registrations) {
         Collections.shuffle(registrations)
-        return registrations.sort { a, b -> b.hasPriority <=> a.hasPriority }
+        registrations.sort { a, b -> b.hasPriority <=> a.hasPriority }
     }
 
     static LotteryResult getBestResult(LotteryResult a, LotteryResult b) {

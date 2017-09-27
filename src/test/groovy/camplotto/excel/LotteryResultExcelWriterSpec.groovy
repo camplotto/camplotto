@@ -12,13 +12,13 @@ class LotteryResultExcelWriterSpec extends Specification {
                 registration: new Registration(name: "Registration A"),
                 site: new Site(name: "Site 1"),
                 reservationDate: new ReservationDate(name: "Week 1"))
-        lotteryResult.takenReservations = [takenReservation]
+        lotteryResult.reservations = [takenReservation]
 
         Reservation availableReservation = new Reservation(
                 site: new Site(name: "Site 2"),
                 reservationDate: new ReservationDate(name: "Week 2")
         )
-        lotteryResult.availableReservations = [availableReservation]
+        lotteryResult.reservations << availableReservation
 
         Registration unmatchedRegistration = new Registration(name: "Registration B")
         lotteryResult.unmatchedRegistrations = [unmatchedRegistration]

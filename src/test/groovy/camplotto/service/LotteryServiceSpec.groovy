@@ -35,8 +35,8 @@ class LotteryServiceSpec extends Specification {
 
     def "getBestResult when a result has more taken reservations"() {
         given:
-        LotteryResult a = new LotteryResult(takenReservations: [new Reservation(), new Reservation()])
-        LotteryResult b = new LotteryResult(takenReservations: [new Reservation()])
+        LotteryResult a = new LotteryResult(reservations: [new Reservation(registration: new Registration()), new Reservation(registration: new Registration())])
+        LotteryResult b = new LotteryResult(reservations: [new Reservation(registration: new Registration())])
 
         expect:
         LotteryService.getBestResult(a, b) == a
@@ -82,7 +82,7 @@ class LotteryServiceSpec extends Specification {
 
         then:
         lotteryResult.availableReservations.size() == 1
-        lotteryResult.availableReservations[0].site == siteACap1
+        lotteryResult.reservations[0].site == siteACap1
         lotteryResult.takenReservations.size() == 3
     }
 
@@ -90,9 +90,9 @@ class LotteryServiceSpec extends Specification {
     def "the best lottery scenario is having one site left, with either registration 2 or 3 being unmatched"() {
         given:
         List<Reservation> availableReservations = [week1SiteA, week1SiteB]
-        Registration reg1 = new Registration(preferredSites: [siteACap1, siteBCap2], preferredDates: [week1])
-        Registration reg2 = new Registration(preferredSites: [siteACap1], preferredDates: [week1])
-        Registration reg3 = new Registration(preferredSites: [siteACap1], preferredDates: [week1])
+        Registration reg1 = new Registration(name: 'name1', preferredSites: [siteACap1, siteBCap2], preferredDates: [week1])
+        Registration reg2 = new Registration(name: 'name2', preferredSites: [siteACap1], preferredDates: [week1])
+        Registration reg3 = new Registration(name: 'name3', preferredSites: [siteACap1], preferredDates: [week1])
 
         when:
         LotteryResult lotteryResult = LotteryService.run(availableReservations, [reg1, reg2, reg3])
@@ -102,6 +102,16 @@ class LotteryServiceSpec extends Specification {
         lotteryResult.takenReservations.size() == 2
         lotteryResult.unmatchedRegistrations.size() == 1
         lotteryResult.unmatchedRegistrations[0] in [reg2, reg3]
+
+        // no registrations marked as both taken and unmatched
+        !lotteryResult.takenReservations.any { Reservation takenReservation -> takenReservation.registration.name in lotteryResult.unmatchedRegistrations.name }
+
+        // no duplicate reservations
+        when:
+        Map reservationCountByName = lotteryResult.takenReservations.countBy { it.registration.name }
+        then:
+        !reservationCountByName.values().any { it > 1 }
+
 
         where: "running this test multiple times should always produce the best possible result"
         a << [1..10]
