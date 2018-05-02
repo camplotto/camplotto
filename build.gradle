@@ -1,88 +1,51 @@
 buildscript {
+    ext.appengine_version = '1.9.60'
+    ext.appengine_plugin_version = '1.3.4'
+
     repositories {
         jcenter()
     }
-
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'org.ajoberstar:gradle-git:1.7.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.cloud.tools:appengine-gradle-plugin:$appengine_plugin_version"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.1.0"
     }
 }
 
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-    id 'org.ajoberstar.release-opinion' version '1.7.2'
-    id 'org.ajoberstar.grgit' version '1.7.2'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+apply plugin: 'kotlin'
+apply plugin: 'war'
+apply plugin: 'com.google.cloud.tools.appengine'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+// appengine does not honor this property, so we are forced to use deep Maven tree layout
+// webAppDirName = file('webapp')
+
+sourceSets {
+    main.kotlin.srcDirs = [ 'src/main/kotlin' ]
 }
 
 repositories {
     jcenter()
+    maven { url "https://kotlin.bintray.com/ktor" }
 }
-
-apply plugin: 'groovy'
-apply plugin: 'idea'
-apply from: 'gradle/publishing.gradle'
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.7"
-    compile "ch.qos.logback:logback-classic:1.1.7"
-    compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile 'org.apache.poi:poi:3.13'
-    compile 'org.apache.poi:poi-ooxml:3.13'
-    compile 'org.apache.poi:ooxml-schemas:1.1'
-    compile 'net.sf.jxls:jxls-core:1.0.5'
-    compile 'net.sf.jxls:jxls-reader:1.0.5'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "io.ktor:ktor-server-servlet:$ktor_version"
+    compile "io.ktor:ktor-html-builder:$ktor_version"
+    compile "org.slf4j:slf4j-jdk14:$slf4j_version"
 
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
-}
+    providedCompile "com.google.appengine:appengine:$appengine_version"
 
-sourceSets {
-    main {
-        resources.srcDir 'src/main/resources'
-    }
-}
-
-task sourcesJar(type: Jar) {
-    group 'Build'
-    description 'An archive of the source code'
-    classifier 'sources'
-    from sourceSets.main.allSource
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
+    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.4'
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 
 test {
-    testLogging {
-        events "failed"
-        exceptionFormat "short"
-        showStandardStreams = true
-    }
+    useJUnitPlatform()
 }
 
-jar { manifest { attributes 'Main-Class': 'camplotto.ExcelRunner' } }
-jar.finalizedBy sourcesJar
+kotlin.experimental.coroutines = 'enable'
 
-artifacts {
-    sourcesJar
-}
-
-shadowJar {
-    baseName = 'camplotto'
-    classifier = null
-    version = null
-}
-
-tasks.release.dependsOn 'build', 'bintrayUpload'
-
-/*
-Release task cheatsheet:
-// export GRGIT_USER=$username
-// export GRGIT_PASS=$github_access_token
-// commit and push
-
-major release:
-gw clean release -Prelease.scope=major -Prelease.stage=final
-minor release:
-gw clean release -Prelease.scope=minor -Prelease.stage=final
-patch release:
-gw clean release -Prelease.scope=patch -Prelease.stage=final
-*/
+//task run(dependsOn: appengineRun)
