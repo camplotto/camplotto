@@ -34,11 +34,13 @@ dependencies {
     compile "io.ktor:ktor-server-servlet:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
     compile "org.slf4j:slf4j-jdk14:$slf4j_version"
+    compile "org.apache.poi:poi-ooxml:3.17"
+    compile "com.github.dpaukov:combinatoricslib3:3.3.0"
 
     providedCompile "com.google.appengine:appengine:$appengine_version"
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
-    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.0.4'
+    testCompile 'io.kotlintest:kotlintest-runner-junit5:3.1.6'
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 

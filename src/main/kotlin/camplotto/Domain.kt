@@ -8,14 +8,23 @@ data class Site(val name: String)
 
 data class Registration(
         val name: String,
+        val group: String? = null,
         val preferredSites: List<Site>,
         val preferredDates: List<ReservationDate>,
         val preferSiteOverDate: Boolean,
-        val priorityRank: Int = Int.MAX_VALUE)
+        val priorityRank: Int = Int.MAX_VALUE,
+        var wasGroupProcessed: Boolean = false) {
+
+    fun isPartOfGroup(): Boolean = !group.isNullOrEmpty()
+}
 
 fun List<Registration>.shuffleAndPrioritize(): List<Registration> {
     Collections.shuffle(this)
     return this.sortedBy { it.priorityRank }
+}
+
+fun List<Registration>.getGroupMembers(registration: Registration): List<Registration> {
+    return this.filter { it.group == registration.group }
 }
 
 data class Reservation(

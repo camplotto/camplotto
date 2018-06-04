@@ -35,27 +35,7 @@ class LotteryServiceTest {
     fun `getBestResult when a result has more taken reservations`() {
         val a = LotteryResult(reservations = listOf(week1SiteA.copy(registration = defaultRegistration), week1SiteB.copy(registration = defaultRegistration)))
         val b = LotteryResult(reservations = listOf(week1SiteA.copy(registration = defaultRegistration)))
-        LotteryService().getBestResult(a, b) shouldBe a
-    }
-
-    @Test
-    fun `findAvailableReservation match based on preference`() {
-        val availableReservations = listOf(week2SiteA, week1SiteB)
-
-        val registration = Registration(name = "a", preferredSites= listOf(siteA, siteB), preferredDates = listOf(week1, week2), preferSiteOverDate= true)
-        LotteryService().findAvailableReservation(availableReservations, registration) shouldBe week2SiteA
-
-        val registration2 = registration.copy(preferSiteOverDate = false)
-        LotteryService().findAvailableReservation(availableReservations, registration2) shouldBe week1SiteB
-    }
-
-    @Test
-    fun `findAvailableReservation no match`() {
-        val availableReservations = listOf(week1SiteA)
-
-        val registration = Registration(preferredSites = listOf(siteB), preferredDates = listOf(week2), name = "a", preferSiteOverDate = true)
-
-        LotteryService().findAvailableReservation(availableReservations, registration) shouldBe null
+        LotteryService().getBestLotteryResult(a, b) shouldBe a
     }
 
     @Test
